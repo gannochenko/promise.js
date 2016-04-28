@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="../src/promise.js"></script>
+</head>
+<body>
+
+	<script>
+		var p = new Promise();
+		p.then(function(value){
+			console.dir('fulfilled with value:');
+			console.dir(value);
+		}, function(reason){
+			console.dir('rejected with reason:');
+			console.dir(reason);
+		});
+
+		setTimeout(function(){
+			setTimeout(function(){
+
+				var r = Math.random() * 1000;
+
+				if(r > 500)
+				{
+					p.fulfill(r);
+				}
+				else
+				{
+					p.reject(r);
+				}
+			}, 1000);
+		}, 1000);
+	</script>
+
+</body>
+</html>
