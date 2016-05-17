@@ -37,7 +37,17 @@
 			this.onRejected.push(onRejected);
 		}
 
-		return this.execute();
+		if(this.next === null) // todo: or should be array of next here?
+		{
+			this.next = new BX.Tasks.Util.Promise();
+		}
+
+		if(this.state !== null) // if promise is already resolved, execute immediately
+		{
+			this.execute();
+		}
+
+		return this.next;
 	};
 	/**
 	 * Resolve function. This allows to put *this* promise in dependence of
@@ -96,15 +106,10 @@
 	};
 	Promise.prototype.execute = function()
 	{
-		if(this.next === null)
-		{
-			this.next = new Promise();
-		}
-
 		if(this.state === null)
 		{
 			//then() must not be called before promise resolve() happens
-			return this.next;
+			return;
 		}
 
 		var value = undefined;
@@ -164,12 +169,12 @@
 
 		if(typeof reason != 'undefined')
 		{
-			this.next.reject(reason);
+			this.next.reject(reason); // todo: or should we reject an array of next?
 		}
 		else if(typeof value != 'undefined')
 		{
 			// run this.next resolve, which eventually calls this.next.fulfill() or this.next.reject()
-			this.next.resolve(value);
+			this.next.resolve(value); // todo: or should we resolve an array of next?
 		}
 
 		return this.next;
