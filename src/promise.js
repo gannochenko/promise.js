@@ -39,7 +39,7 @@
 
 		if(this.next === null) // todo: or should be array of next here?
 		{
-			this.next = new BX.Tasks.Util.Promise();
+			this.next = new Promise();
 		}
 
 		if(this.state !== null) // if promise is already resolved, execute immediately
@@ -167,17 +167,18 @@
 			}
 		}
 
-		if(typeof reason != 'undefined')
+		if(this.next !== null)
 		{
-			this.next.reject(reason); // todo: or should we reject an array of next?
+			if(typeof reason != 'undefined')
+			{
+				this.next.reject(reason); // todo: or should we reject an array of next?
+			}
+			else if(typeof value != 'undefined')
+			{
+				// run this.next resolve, which eventually calls this.next.fulfill() or this.next.reject()
+				this.next.resolve(value); // todo: or should we resolve an array of next?
+			}
 		}
-		else if(typeof value != 'undefined')
-		{
-			// run this.next resolve, which eventually calls this.next.fulfill() or this.next.reject()
-			this.next.resolve(value); // todo: or should we resolve an array of next?
-		}
-
-		return this.next;
 	};
 	Promise.prototype.checkState = function()
 	{

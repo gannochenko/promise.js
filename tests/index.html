@@ -8,6 +8,7 @@
 <body>
 
 	<script>
+		/*
 		var p = new Promise();
 		p.then(function(value){
 			console.dir('fulfilled with value:');
@@ -32,6 +33,61 @@
 				}
 			}, 1000);
 		}, 1000);
+		*/
+
+		var p1 = new Promise();
+
+		p1.then(function(cnt){
+
+			var p = new Promise();
+
+			setTimeout(function(){
+				console.dir(cnt);
+				p.resolve(cnt + 1);
+			}, 1000);
+
+			return p;
+
+		}).then(function(cnt){
+
+			var p = new Promise();
+
+			setTimeout(function(){
+				console.dir(cnt);
+
+				var heads = Math.random() * 1000 > 500;
+
+				if(heads)
+				{
+					p.reject('i`ve chosen tails :(');
+				}
+				else
+				{
+					p.resolve(cnt + 1);
+				}
+
+			}, 1000);
+
+			return p;
+
+		}).then(function(cnt){
+
+			var p = new Promise();
+
+			setTimeout(function(){
+				console.dir(cnt);
+				p.resolve(cnt + 1);
+			}, 1000);
+
+			return p;
+		}, function(reason){
+
+			console.dir('interrupted: '+reason);
+
+		});
+
+		p1.resolve(1);
+
 	</script>
 
 </body>
